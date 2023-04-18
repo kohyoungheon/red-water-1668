@@ -29,17 +29,45 @@ RSpec.describe 'Dish Show Page', type: :feature do
   describe "dish's show page (User Story 1) " do
     it "displays the name, description, ingredients, total calories, and chefs name for dish" do
       visit dish_path(@dish_1)
-      expect(page).to have_content("Name: Steak")
-      expect(page).to have_content("Description: A delicious steak")
-      expect(page).to have_content("Ingredients:\nBeef Asparagus")
-      expect(page).to have_content("Total Calories: 120")
-      expect(page).to have_content("Chef's Name: Gordon Ramsay")
-
-      expect(page).to_not have_content("Rissoto")
-      expect(page).to_not have_content("Lobster")
-      expect(page).to_not have_content("A delicious rissoto")
-      expect(page).to_not have_content("A delicious lobster")
+      within ("#main_info") do
+        expect(page).to have_content("Name: Steak")
+        expect(page).to have_content("Description: A delicious steak")
+        expect(page).to have_content("Ingredients:\nBeef Asparagus")
+        expect(page).to have_content("Total Calories: 120")
+        expect(page).to have_content("Chef's Name: Gordon Ramsay")
+  
+        expect(page).to_not have_content("Rissoto")
+        expect(page).to_not have_content("Lobster")
+        expect(page).to_not have_content("A delicious rissoto")
+        expect(page).to_not have_content("A delicious lobster")
+      end
     end
   end
 
+  describe "dish's show page (User Story 2) " do
+    it "displays a form to add an existing ingredient to the dish" do
+      visit dish_path(@dish_1)
+      within ("#ingredient_form") do
+        expect(page).to have_selector("#dish_ingredient")
+        expect(page).to have_button("Add an Ingredient")
+      end
+    end
+    it "when I pick an ingredient and click submit, I am redirected to dish's show page where I see new ingredient" do
+      visit dish_path(@dish_1)
+
+      within("#main_info") do
+        expect(page).to_not have_content("Butter")
+      end
+
+      within ("#ingredient_form") do
+        select('Butter', from: 'dish_ingredient')
+        click_button("Add an Ingredient")
+        expect(current_path).to eq(dish_path(@dish_1))
+      end
+
+      within("#main_info") do
+        expect(page).to have_content("Butter")
+      end
+    end
+  end
 end

@@ -1,3 +1,4 @@
+<div id ="main_info">
 <h1>Dish Show Page</h1>
 <p>Name: <%= @dish.name %></p>
 <p>Description: <%= @dish.description %></p>
@@ -6,3 +7,10 @@
                     <% end %></p>                
 <p>Total Calories: <%= @dish.total_calories %></p>
 <p>Chef's Name: <%= @dish.chef.name %></p>
+</div>
+<div id ="ingredient_form">
+<%= form_with model: @dish, local: true do |form| %></p>
+                   <%= form.collection_select :ingredient, Ingredient.all_possible_ingredients(@dish), :id, :name %>
+                   <%= form.submit "Add an Ingredient"%>
+                   <% end %>
+</div>
